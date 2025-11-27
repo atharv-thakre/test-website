@@ -3,707 +3,823 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tic Tac Toe</title>
+    <title>Retail Management System - Python + Tkinter + SQLite3</title>
     <style>
-        body {
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+        
+        * {
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #e2e8f0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .game-container {
+
+        :root {
+            --primary: #ff6b35;
+            --secondary: #f7931e;
+            --accent: #ffb347;
+            --dark: #1a1a2e;
+            --light: #16213e;
+            --text: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --shadow: rgba(255, 107, 53, 0.3);
+            --code-bg: rgba(0, 0, 0, 0.3);
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(-45deg, var(--dark), var(--light), #2d1b69, #ff6b35);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Animated background particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 179, 71, 0.3);
+            border-radius: 50%;
+            animation: float 25s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
             text-align: center;
-            background: rgba(30, 41, 59, 0.4);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(148, 163, 184, 0.1);
+            margin-bottom: 4rem;
+            animation: slideInDown 1s ease-out;
         }
-        
-        h1 {
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            background: linear-gradient(45deg, #ff6b6b, #ff5252, #f87171);
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
         }
-        
-        .menu-screen {
-            display: block;
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(255, 179, 71, 0.8);
+            }
         }
-        
-        .game-screen {
-            display: none;
+
+        .project-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
         }
-        
-        .mode-selection {
-            margin-bottom: 30px;
+
+        .store-emoji {
+            font-size: 3rem;
+            animation: bounce 2s infinite;
         }
-        
-        .mode-btn, .difficulty-btn, .action-btn {
-            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 16px;
-            border-radius: 25px;
-            cursor: pointer;
-            margin: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-15px);
+            }
+            60% {
+                transform: translateY(-8px);
+            }
         }
-        
-        .mode-btn:hover, .difficulty-btn:hover, .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
-            background: linear-gradient(45deg, #2563eb, #1e40af);
-        }
-        
-        .difficulty-btn {
-            background: linear-gradient(45deg, #10b981, #059669);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-        
-        .difficulty-btn:hover {
-            background: linear-gradient(45deg, #059669, #047857);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-        
-        .difficulty-btn.selected {
-            background: linear-gradient(45deg, #f59e0b, #d97706);
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-        }
-        
-        .action-btn {
-            background: linear-gradient(45deg, #8b5cf6, #7c3aed);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-        
-        .action-btn:hover {
-            background: linear-gradient(45deg, #7c3aed, #6d28d9);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
-        }
-        
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(3, 120px);
-            grid-template-rows: repeat(3, 120px);
-            gap: 8px;
-            margin: 20px auto;
-            background: linear-gradient(45deg, #1e293b, #334155);
-            padding: 15px;
+
+        .section {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            position: relative;
-        }
-        
-        .game-board::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa, #f472b6, #06d6a0);
-            border-radius: 22px;
-            z-index: -1;
-            animation: borderGlow 3s ease-in-out infinite alternate;
-        }
-        
-        @keyframes borderGlow {
-            0% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-        
-        .cell {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border: none;
-            font-size: 2.5em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #333;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 179, 71, 0.2);
+            animation: slideInUp 1s ease-out;
+            transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        
-        .cell::before {
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section:nth-child(odd) { animation-delay: 0.1s; }
+        .section:nth-child(even) { animation-delay: 0.2s; }
+
+        .section::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
+            background: linear-gradient(90deg, transparent, rgba(255, 179, 71, 0.1), transparent);
+            transition: left 0.8s;
         }
-        
-        .cell:hover {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .cell:hover::before {
+
+        .section:hover::before {
             left: 100%;
         }
-        
-        .cell:active {
-            transform: translateY(-1px) scale(1.02);
+
+        .section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px var(--shadow);
+            border-color: var(--primary);
         }
-        
-        .cell.x {
-            color: #f472b6;
-            background: linear-gradient(135deg, #fce7f3, #f3e8ff);
-            text-shadow: 0 2px 4px rgba(244, 114, 182, 0.3);
-            animation: cellPulse 0.5s ease-in-out;
-        }
-        
-        .cell.o {
-            color: #06d6a0;
-            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-            text-shadow: 0 2px 4px rgba(6, 214, 160, 0.3);
-            animation: cellPulse 0.5s ease-in-out;
-        }
-        
-        @keyframes cellPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        
-        .cell.x::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(244, 114, 182, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
-        .cell.o::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at center, rgba(6, 214, 160, 0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        
-        .game-info {
-            margin: 20px 0;
-            font-size: 1.2em;
-        }
-        
-        .score-board {
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
             display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(30, 41, 59, 0.3);
-            border-radius: 10px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
+            align-items: center;
+            gap: 0.5rem;
         }
-        
-        .score-item {
-            text-align: center;
+
+        .section-emoji {
+            font-size: 1.5rem;
         }
-        
-        .score-number {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-top: 5px;
+
+        .section-content p {
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
         }
-        
-        .game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(15, 23, 42, 0.95);
-            padding: 40px;
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 179, 71, 0.1);
             border-radius: 15px;
+            padding: 1.5rem;
             text-align: center;
-            display: none;
-            z-index: 1000;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            backdrop-filter: blur(20px);
-        }
-        
-        .winner-text {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-        }
-        
-        .difficulty-selection {
-            margin: 20px 0;
-            display: none;
-        }
-        
-        .difficulty-selection.show {
-            display: block;
-        }
-        
-        .footer {
-            margin-top: 20px;
-            padding: 15px;
-            border-top: 1px solid rgba(148, 163, 184, 0.2);
-            text-align: center;
-            font-size: 14px;
-            color: #94a3b8;
-        }
-        
-        .about-btn {
-            background: linear-gradient(45deg, #6366f1, #4f46e5);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            font-size: 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            margin: 5px;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.3);
+            border: 1px solid rgba(255, 179, 71, 0.2);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .about-btn:hover {
-            background: linear-gradient(45deg, #4f46e5, #4338ca);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
-        }
-        
-        .about-modal {
-            position: fixed;
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 179, 71, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            display: block;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-card h4 {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.2);
+        }
+
+        .tech-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .code-block {
+            background: var(--code-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary);
+        }
+
+        .code-block code {
+            color: #ffb347;
+        }
+
+        .command-line {
+            color: #ffd93d;
+        }
+
+        .comment {
+            color: var(--text-muted);
+        }
+
+        .file-structure {
+            font-family: 'Roboto Mono', monospace;
+            background: var(--code-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .file-structure .folder {
+            color: #ffb347;
+        }
+
+        .file-structure .file {
+            color: #87ceeb;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--text);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            transition: left 0.3s ease;
         }
-        
-        .about-content {
-            background: linear-gradient(135deg, #1e293b, #334155);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            max-width: 400px;
-            border: 1px solid rgba(148, 163, 184, 0.2);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+
+        .btn span {
+            position: relative;
+            z-index: 1;
         }
-        
-        .about-title {
-            font-size: 1.5em;
-            margin-bottom: 15px;
-            background: linear-gradient(45deg, #60a5fa, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+
+        .btn:hover::before {
+            left: 0;
         }
-        
-        .github-link {
-            display: inline-block;
-            background: linear-gradient(45deg, #374151, #4b5563);
-            color: #e2e8f0;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            margin-top: 15px;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(148, 163, 184, 0.3);
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.5);
         }
-        
-        .github-link:hover {
-            background: linear-gradient(45deg, #4b5563, #6b7280);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+        .btn-github {
+            background: linear-gradient(135deg, #333, #000);
         }
-        
-        .close-btn {
-            background: linear-gradient(45deg, #ef4444, #dc2626);
+
+        .btn-github:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .installation-steps {
+            counter-reset: step-counter;
+        }
+
+        .installation-step {
+            counter-increment: step-counter;
+            background: rgba(255, 179, 71, 0.05);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            border: 1px solid rgba(255, 179, 71, 0.1);
+        }
+
+        .installation-step::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: -15px;
+            top: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
             color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-top: 15px;
-            transition: all 0.3s ease;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
         }
-        
-        .close-btn:hover {
-            background: linear-gradient(45deg, #dc2626, #b91c1c);
+
+        .installation-step h4 {
+            margin-bottom: 1rem;
+            color: var(--text);
+            margin-left: 1rem;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .screenshot-card {
+            background: rgba(255, 179, 71, 0.05);
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 179, 71, 0.2);
+        }
+
+        .screenshot-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.2);
+        }
+
+        .screenshot-placeholder {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(255, 179, 71, 0.2));
+            border-radius: 10px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 3rem;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .project-title {
+                font-size: 2.5rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
         }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Menu Screen -->
-        <div class="menu-screen" id="menuScreen">
-            <h1>Tic Tac Toe</h1>
-            
-            <div class="mode-selection">
-                <h3>Choose Game Mode</h3>
-                <button class="mode-btn" onclick="selectMode('human')">Human vs Human</button>
-                <button class="mode-btn" onclick="selectMode('computer')">Human vs Computer</button>
-            </div>
-            
-            <div class="difficulty-selection" id="difficultySelection">
-                <h3>Select Difficulty</h3>
-                <button class="difficulty-btn" onclick="selectDifficulty('easy')">Easy</button>
-                <button class="difficulty-btn" onclick="selectDifficulty('medium')">Medium</button>
-                <button class="difficulty-btn" onclick="selectDifficulty('hard')">Hard</button>
-            </div>
-            
-            <button class="action-btn" id="startBtn" onclick="startGame()" style="display: none;">Start Game</button>
-            
-            <div class="footer">
-                <button class="about-btn" onclick="showAbout()">About</button>
-            </div>
-        </div>
+    <div class="particles"></div>
+    
+    <div class="container">
+        <header class="header">
+            <div class="store-emoji">🏬</div>
+            <h1 class="project-title">Retail Management System</h1>
+            <p class="project-subtitle">Python + Tkinter + SQLite3</p>
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">A complete offline & local retail management solution with user-friendly GUI</p>
+        </header>
         
-        <!-- Game Screen -->
-        <div class="game-screen" id="gameScreen">
-            <h1>Tic Tac Toe</h1>
-            
-            <div class="game-info" id="gameInfo">Player X's turn</div>
-            
-            <div class="game-board" id="gameBoard">
-                <button class="cell" onclick="makeMove(0)"></button>
-                <button class="cell" onclick="makeMove(1)"></button>
-                <button class="cell" onclick="makeMove(2)"></button>
-                <button class="cell" onclick="makeMove(3)"></button>
-                <button class="cell" onclick="makeMove(4)"></button>
-                <button class="cell" onclick="makeMove(5)"></button>
-                <button class="cell" onclick="makeMove(6)"></button>
-                <button class="cell" onclick="makeMove(7)"></button>
-                <button class="cell" onclick="makeMove(8)"></button>
-            </div>
-            
-            <div class="score-board">
-                <div class="score-item">
-                    <div>Player X</div>
-                    <div class="score-number" id="scoreX">0</div>
-                </div>
-                <div class="score-item">
-                    <div>Draws</div>
-                    <div class="score-number" id="scoreDraw">0</div>
-                </div>
-                <div class="score-item">
-                    <div>Player O</div>
-                    <div class="score-number" id="scoreO">0</div>
+        <div class="btn-container">
+            <a href="https://github.com/atharv-thakre/retail_management_system" target="_blank" class="btn btn-github">
+                <span>🐙 Visit GitHub Repository</span>
+            </a>
+            <a href="#" onclick="window.history.back()" class="btn">
+                <span>← Back to Portfolio</span>
+            </a>
+        </div>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-emoji">📂</span>
+                Project Structure
+            </h2>
+            <div class="section-content">
+                <div class="file-structure">
+<pre><span class="folder">retail_management_system/</span>
+├── <span class="file">main.py</span>                  <span class="comment"># Entry point (choose Admin / Employee)</span>
+├── <span class="file">admin.py</span>                 <span class="comment"># Admin panel (manage inventory, employees, merchants)</span>
+├── <span class="file">employee.py</span>              <span class="comment"># Employee panel (billing system, sales records)</span>
+├── <span class="file">support.py</span>               <span class="comment"># Helper functions and utilities</span>
+├── <span class="folder">images/</span>                    <span class="comment"># 24 PNG icons & UI images</span>
+├── <span class="folder">database/</span>
+│   ├── <span class="file">account.db</span>           <span class="comment"># SQLite3 database (employees, products, merchants, bills)</span>
+│   └── <span class="file">raw_inventory.csv</span>    <span class="comment"># Initial inventory data</span>
+└── <span class="folder">fonts/</span>                     <span class="comment"># Custom fonts used in GUI</span></pre>
                 </div>
             </div>
-            
-            <button class="action-btn" onclick="resetGame()">New Game</button>
-            <button class="action-btn" onclick="backToMenu()">Back to Menu</button>
-            
-            <div class="footer">
-                <button class="about-btn" onclick="showAbout()">About</button>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-emoji">✨</span>
+                Features
+            </h2>
+            <div class="section-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">👥</span>
+                        <h4>Admin & Employee Login</h4>
+                        <p>Direct login options for different user roles</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🏷️</span>
+                        <h4>Employee Management</h4>
+                        <p>Add, Remove, Edit employee details</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📦</span>
+                        <h4>Inventory Management</h4>
+                        <p>Add, Edit, Delete products & update stock</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🤝</span>
+                        <h4>Merchant Management</h4>
+                        <p>Add & manage product suppliers</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🧾</span>
+                        <h4>Billing System</h4>
+                        <p>Generate bills & record transactions</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">📋</span>
+                        <h4>Previous Bills Record</h4>
+                        <p>Access and view past bills</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🎨</span>
+                        <h4>GUI Interface</h4>
+                        <p>User-friendly design with icons, buttons & images</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">💾</span>
+                        <h4>Local Database</h4>
+                        <p>Uses SQLite3 (no external setup needed)</p>
+                    </div>
+                </div>
             </div>
-        </div>
-        
-        <!-- Game Over Modal -->
-        <div class="game-over" id="gameOverModal">
-            <div class="winner-text" id="winnerText">Game Over!</div>
-            <button class="action-btn" onclick="playAgain()">Play Again</button>
-            <button class="action-btn" onclick="backToMenu()">Back to Menu</button>
-        </div>
-        
-        <!-- About Modal -->
-        <div class="about-modal" id="aboutModal">
-            <div class="about-content">
-                <div class="about-title">About This Game</div>
-                <p>Developed by <strong>Team Total Chaos</strong></p>
-                <p>A modern take on the classic Tic Tac Toe game with multiple difficulty levels and beautiful animations.</p>
-                <a href="https://github.com/atharv-thakre/test-website" target="_blank" class="github-link">
-                    🔗 View on GitHub
-                </a>
-                <br>
-                <button class="close-btn" onclick="hideAbout()">Close</button>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-emoji">🛠️</span>
+                Tech Stack
+            </h2>
+            <div class="section-content">
+                <div class="tech-stack">
+                    <span class="tech-item">Python 3</span>
+                    <span class="tech-item">Tkinter GUI</span>
+                    <span class="tech-item">SQLite3 Database</span>
+                    <span class="tech-item">CSV Processing</span>
+                    <span class="tech-item">Custom Fonts & Icons</span>
+                </div>
             </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-emoji">⚙️</span>
+                Installation & Setup
+            </h2>
+            <div class="section-content">
+                <div class="installation-steps">
+                    <div class="installation-step">
+                        <h4>Clone the repository</h4>
+                        <div class="code-block">
+                            <code class="command-line">git clone https://github.com/atharv-thakre/retail_management_system.git</code><br>
+                            <code class="command-line">cd retail_management_system</code>
+                        </div>
+                    </div>
+
+                    <div class="installation-step">
+                        <h4>Create virtual environment (optional but recommended)</h4>
+                        <p><strong>Windows:</strong></p>
+                        <div class="code-block">
+                            <code class="command-line">python -m venv venv</code><br>
+                            <code class="command-line">venv\Scripts\activate</code>
+                        </div>
+                        <p><strong>Mac/Linux:</strong></p>
+                        <div class="code-block">
+                            <code class="command-line">python -m venv venv</code><br>
+                            <code class="command-line">source venv/bin/activate</code>
+                        </div>
+                    </div>
+
+                    <div class="installation-step">
+                        <h4>Run the application</h4>
+                        <div class="code-block">
+                            <code class="command-line">python main.py</code>
+                        </div>
+                        <p style="margin-top: 1rem; color: var(--text-secondary);">
+                            <strong>Note:</strong> No additional dependencies required! Python's built-in Tkinter and SQLite3 are used.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-emoji">🖥️</span>
+                Screenshots Preview
+            </h2>
+            <div class="section-content">
+                <div class="screenshots-grid">
+                    <div class="screenshot-card">
+                        <div class="screenshot-placeholder">🏠</div>
+                        <h4>Main Window</h4>
+                        <p>Entry point to choose Admin or Employee login</p>
+                    </div>
+                    <div class="screenshot-card">
+                        <div class="screenshot-placeholder">👤</div>
+                        <h4>Employee Login</h4>
+                        <p>Secure employee authentication system</p>
+                    </div>
+                    <div class="screenshot-card">
+                        <div class="screenshot-placeholder">🧾</div>
+                        <h4>Billing Window</h4>
+                        <p>Intuitive billing interface with product search</p>
+                    </div>
+                    <div class="screenshot-card">
+                        <div class="screenshot-placeholder">✏️</div>
+                        <h4>Update Employee</h4>
+                        <p>Admin panel for managing employee information</p>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+                    📸 <em>Actual screenshots available in the GitHub repository</em>
+                </p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">
+                <span class="section-emoji">🎯</span>
+                Key Highlights
+            </h2>
+            <div class="section-content">
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <span class="feature-icon">📱</span>
+                        <h4>Completely Offline</h4>
+                        <p>Works without internet connection or external servers</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">⚡</span>
+                        <h4>Easy Setup</h4>
+                        <p>No complex installation - just run the Python script</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🎨</span>
+                        <h4>Rich GUI</h4>
+                        <p>24 custom icons and intuitive user interface design</p>
+                    </div>
+                    <div class="feature-card">
+                        <span class="feature-icon">🔒</span>
+                        <h4>Secure Local Storage</h4>
+                        <p>SQLite3 database ensures data integrity and security</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="btn-container">
+            <a href="https://github.com/atharv-thakre/retail_management_system" target="_blank" class="btn btn-github">
+                <span>🐙 Star on GitHub</span>
+            </a>
+            <a href="#" onclick="window.history.back()" class="btn">
+                <span>← Back to Portfolio</span>
+            </a>
         </div>
     </div>
 
     <script>
-        // Game state variables
-        let gameState = {
-            board: Array(9).fill(''),
-            currentPlayer: 'X',
-            gameMode: '',
-            difficulty: '',
-            isGameActive: false,
-            scores: { X: 0, O: 0, draw: 0 }
-        };
-        
-        // Winning combinations
-        const winPatterns = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-            [0, 4, 8], [2, 4, 6] // Diagonals
-        ];
-        
-        // Mode selection
-        function selectMode(mode) {
-            gameState.gameMode = mode;
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
             
-            if (mode === 'computer') {
-                document.getElementById('difficultySelection').classList.add('show');
-            } else {
-                document.getElementById('difficultySelection').classList.remove('show');
-                document.getElementById('startBtn').style.display = 'block';
+            for (let i = 0; i < 35; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 25 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
             }
         }
-        
-        // Difficulty selection
-        function selectDifficulty(difficulty) {
-            gameState.difficulty = difficulty;
-            
-            // Update button styles
-            document.querySelectorAll('.difficulty-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-            
-            document.getElementById('startBtn').style.display = 'block';
-        }
-        
-        // Start game
-        function startGame() {
-            gameState.isGameActive = true;
-            gameState.board = Array(9).fill('');
-            gameState.currentPlayer = 'X';
-            
-            document.getElementById('menuScreen').style.display = 'none';
-            document.getElementById('gameScreen').style.display = 'block';
-            
-            updateBoard();
-            updateGameInfo();
-        }
-        
-        // Make a move
-        function makeMove(index) {
-            if (!gameState.isGameActive || gameState.board[index] !== '') return;
-            
-            gameState.board[index] = gameState.currentPlayer;
-            updateBoard();
-            
-            if (checkWin()) {
-                endGame(`Player ${gameState.currentPlayer} wins!`);
-                gameState.scores[gameState.currentPlayer]++;
-                updateScores();
-                return;
-            }
-            
-            if (checkDraw()) {
-                endGame("It's a draw!");
-                gameState.scores.draw++;
-                updateScores();
-                return;
-            }
-            
-            // Switch player
-            gameState.currentPlayer = gameState.currentPlayer === 'X' ? 'O' : 'X';
-            updateGameInfo();
-            
-            // Computer move
-            if (gameState.gameMode === 'computer' && gameState.currentPlayer === 'O') {
-                setTimeout(makeComputerMove, 500);
-            }
-        }
-        
-        // Computer AI with different difficulties
-        function makeComputerMove() {
-            let move;
-            
-            switch (gameState.difficulty) {
-                case 'easy':
-                    move = getRandomMove();
-                    break;
-                case 'medium':
-                    move = getMediumMove();
-                    break;
-                case 'hard':
-                    move = getHardMove();
-                    break;
-            }
-            
-            if (move !== -1) {
-                makeMove(move);
-            }
-        }
-        
-        // Easy AI - Random moves
-        function getRandomMove() {
-            const availableMoves = gameState.board
-                .map((cell, index) => cell === '' ? index : -1)
-                .filter(index => index !== -1);
-            
-            return availableMoves[Math.floor(Math.random() * availableMoves.length)];
-        }
-        
-        // Medium AI - Block player wins, otherwise random
-        function getMediumMove() {
-            // Try to block player win
-            for (let pattern of winPatterns) {
-                const [a, b, c] = pattern;
-                if (gameState.board[a] === 'X' && gameState.board[b] === 'X' && gameState.board[c] === '') return c;
-                if (gameState.board[a] === 'X' && gameState.board[c] === 'X' && gameState.board[b] === '') return b;
-                if (gameState.board[b] === 'X' && gameState.board[c] === 'X' && gameState.board[a] === '') return a;
-            }
-            
-            return getRandomMove();
-        }
-        
-        // Hard AI - Minimax algorithm
-        function getHardMove() {
-            // Try to win first
-            for (let pattern of winPatterns) {
-                const [a, b, c] = pattern;
-                if (gameState.board[a] === 'O' && gameState.board[b] === 'O' && gameState.board[c] === '') return c;
-                if (gameState.board[a] === 'O' && gameState.board[c] === 'O' && gameState.board[b] === '') return b;
-                if (gameState.board[b] === 'O' && gameState.board[c] === 'O' && gameState.board[a] === '') return a;
-            }
-            
-            // Try to block player win
-            for (let pattern of winPatterns) {
-                const [a, b, c] = pattern;
-                if (gameState.board[a] === 'X' && gameState.board[b] === 'X' && gameState.board[c] === '') return c;
-                if (gameState.board[a] === 'X' && gameState.board[c] === 'X' && gameState.board[b] === '') return b;
-                if (gameState.board[b] === 'X' && gameState.board[c] === 'X' && gameState.board[a] === '') return a;
-            }
-            
-            // Take center if available
-            if (gameState.board[4] === '') return 4;
-            
-            // Take corners
-            const corners = [0, 2, 6, 8];
-            for (let corner of corners) {
-                if (gameState.board[corner] === '') return corner;
-            }
-            
-            // Take edges
-            const edges = [1, 3, 5, 7];
-            for (let edge of edges) {
-                if (gameState.board[edge] === '') return edge;
-            }
-            
-            return getRandomMove();
-        }
-        
-        // Check for win
-        function checkWin() {
-            return winPatterns.some(pattern => {
-                const [a, b, c] = pattern;
-                return gameState.board[a] !== '' && 
-                       gameState.board[a] === gameState.board[b] && 
-                       gameState.board[b] === gameState.board[c];
-            });
-        }
-        
-        // Check for draw
-        function checkDraw() {
-            return gameState.board.every(cell => cell !== '');
-        }
-        
-        // Update board display
-        function updateBoard() {
-            const cells = document.querySelectorAll('.cell');
-            cells.forEach((cell, index) => {
-                cell.textContent = gameState.board[index];
-                cell.className = 'cell';
-                if (gameState.board[index]) {
-                    cell.classList.add(gameState.board[index].toLowerCase());
+
+        // Smooth scrolling for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
                 }
             });
-        }
-        
-        // Update game info
-        function updateGameInfo() {
-            const info = document.getElementById('gameInfo');
-            if (gameState.gameMode === 'human') {
-                info.textContent = `Player ${gameState.currentPlayer}'s turn`;
-            } else {
-                info.textContent = gameState.currentPlayer === 'X' ? "Your turn" : "Computer's turn";
-            }
-        }
-        
-        // Update scores
-        function updateScores() {
-            document.getElementById('scoreX').textContent = gameState.scores.X;
-            document.getElementById('scoreO').textContent = gameState.scores.O;
-            document.getElementById('scoreDraw').textContent = gameState.scores.draw;
-        }
-        
-        // End game
-        function endGame(message) {
-            gameState.isGameActive = false;
-            document.getElementById('winnerText').textContent = message;
-            document.getElementById('gameOverModal').style.display = 'block';
-        }
-        
-        // Reset game
-        function resetGame() {
-            gameState.board = Array(9).fill('');
-            gameState.currentPlayer = 'X';
-            gameState.isGameActive = true;
+        });
+
+        // Dynamic color change (orange theme)
+        let hue = 20;
+        setInterval(() => {
+            hue += 0.3;
+            if (hue > 50) hue = 15;
+            document.documentElement.style.setProperty('--primary', `hsl(${hue}, 85%, 60%)`);
+        }, 1200);
+
+        // Initialize particles
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
             
-            document.getElementById('gameOverModal').style.display = 'none';
-            updateBoard();
-            updateGameInfo();
-        }
-        
-        // Play again
-        function playAgain() {
-            resetGame();
-        }
-        
-        // Back to menu
-        function backToMenu() {
-            document.getElementById('gameScreen').style.display = 'none';
-            document.getElementById('gameOverModal').style.display = 'none';
-            document.getElementById('menuScreen').style.display = 'block';
-            
-            // Reset selections
-            document.getElementById('difficultySelection').classList.remove('show');
-            document.getElementById('startBtn').style.display = 'none';
-            document.querySelectorAll('.difficulty-btn').forEach(btn => {
-                btn.classList.remove('selected');
+            // Stagger animation for sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                section.style.animationDelay = (index * 0.15) + 's';
             });
-        }
-        
-        // Initialize game
-        updateScores();
-        
-        // About modal functions
-        function showAbout() {
-            document.getElementById('aboutModal').style.display = 'flex';
-        }
-        
-        function hideAbout() {
-            document.getElementById('aboutModal').style.display = 'none';
-        }
+        });
+
+        // Add ripple effect to buttons
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                let ripple = document.createElement('span');
+                ripple.style.position = 'absolute';
+                ripple.style.borderRadius = '50%';
+                ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+                ripple.style.transform = 'scale(0)';
+                ripple.style.animation = 'ripple 0.6s linear';
+                ripple.style.left = (e.clientX - e.target.offsetLeft) + 'px';
+                ripple.style.top = (e.clientY - e.target.offsetTop) + 'px';
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+
+        // Parallax effect for feature cards
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.feature-card');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            cards.forEach((card, index) => {
+                const xOffset = (mouseX - 0.5) * 10;
+                const yOffset = (mouseY - 0.5) * 10;
+                card.style.transform = `translateX(${xOffset}px) translateY(${yOffset}px)`;
+            });
+        });
     </script>
 </body>
 </html>
