@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Retail Management System</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -14,221 +16,209 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            background: linear-gradient(135deg, #0f0f1e 0%, #1b2333 100%);
             color: #e0e0e0;
             min-height: 100vh;
             overflow-x: hidden;
+            animation: fadePage 1.2s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadePage {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: 50px 20px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 60px;
+            margin-bottom: 70px;
             animation: fadeInDown 1s ease;
         }
 
+        /* UPDATED: Removed glow animation */
         h1 {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #87CEEB 0%, #FFA07A 100%);
+            background: linear-gradient(135deg, #6EE7FF 0%, #8B5CF6 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite alternate;
+            margin-bottom: 15px;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            color: #a0a0a0;
+            font-size: 1.3rem;
+            color: #b4b4b4;
             font-weight: 300;
+            animation: fadeInUp 1s ease both;
         }
 
         .project-info {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border-radius: 25px;
+            padding: 35px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
             animation: fadeInUp 1s ease 0.3s both;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35),
+                        0 0 20px rgba(110, 231, 255, 0.1);
+            transition: 0.4s;
+        }
+
+        .project-info:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.45),
+                        0 0 30px rgba(139, 92, 246, 0.25);
         }
 
         .project-info h2 {
-            color: #87CEEB;
+            color: #6EE7FF;
             margin-bottom: 15px;
-            font-size: 1.8rem;
+            font-size: 2rem;
         }
 
         .project-info p {
             line-height: 1.8;
-            color: #c0c0c0;
+            color: #cfd1d3;
+            font-size: 1.05rem;
+        }
+
+        .tech-badge {
+            display: inline-block;
+            background: rgba(110, 231, 255, 0.15);
+            color: #6EE7FF;
+            padding: 8px 18px;
+            border-radius: 30px;
+            margin: 8px 6px 0;
+            font-size: 0.9rem;
+            border: 1px solid rgba(110, 231, 255, 0.25);
+            transition: 0.25s;
+        }
+
+        .tech-badge:hover {
+            transform: scale(1.08);
+            background: rgba(139, 92, 246, 0.25);
+            color: #cbbcff;
         }
 
         .team-section {
-            margin-top: 50px;
+            margin-top: 60px;
+            animation: fadeInUp 1s ease 0.5s both;
         }
 
         .team-section h2 {
             text-align: center;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 50px;
-            color: #87CEEB;
-            animation: fadeInUp 1s ease 0.5s both;
+            color: #6EE7FF;
         }
 
         .team-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 35px;
         }
 
         .team-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.4s ease;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            animation: fadeInUp 1s ease both;
             position: relative;
             overflow: hidden;
-            animation: fadeInUp 1s ease both;
+            transition: 0.4s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.35);
         }
 
-        .team-card:nth-child(1) { animation-delay: 0.7s; }
-        .team-card:nth-child(2) { animation-delay: 0.9s; }
-        .team-card:nth-child(3) { animation-delay: 1.1s; }
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(110, 231, 255, 0.5);
+            box-shadow:
+                0 15px 35px rgba(0,0,0,0.45),
+                0 0 30px rgba(110, 231, 255, 0.3);
+        }
 
         .team-card::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(135, 206, 235, 0.1), transparent);
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: radial-gradient(circle, rgba(110,231,255,0.12), transparent 70%);
             transform: rotate(45deg);
             transition: all 0.6s ease;
         }
 
         .team-card:hover::before {
-            left: 100%;
-        }
-
-        .team-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(135, 206, 235, 0.5);
-            box-shadow: 0 15px 40px rgba(135, 206, 235, 0.3);
+            left: 60%;
         }
 
         .avatar {
             width: 100px;
             height: 100px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #87CEEB 0%, #FFA07A 100%);
+            background: linear-gradient(135deg, #6EE7FF 0%, #8B5CF6 100%);
             margin: 0 auto 20px;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 2.5rem;
+            align-items: center;
+            font-size: 2.4rem;
             font-weight: 700;
             color: white;
-            box-shadow: 0 10px 30px rgba(135, 206, 235, 0.4);
+            box-shadow: 0 10px 30px rgba(110,231,255,0.35);
         }
 
         .team-card h3 {
-            color: #fff;
-            font-size: 1.5rem;
+            color: #ffffff;
+            font-size: 1.6rem;
             margin-bottom: 10px;
-            text-align: center;
         }
 
         .enrollment {
-            color: #87CEEB;
-            text-align: center;
+            color: #6EE7FF;
             font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .role {
-            text-align: center;
-            color: #a0a0a0;
-            font-size: 0.9rem;
+            color: #c4c4c4;
+            font-size: 0.95rem;
         }
 
         footer {
             text-align: center;
-            margin-top: 60px;
+            margin-top: 70px;
             padding: 30px;
-            color: #a0a0a0;
-            animation: fadeIn 1s ease 1.3s both;
-        }
-
-        .tech-badge {
-            display: inline-block;
-            background: rgba(135, 206, 235, 0.2);
-            color: #87CEEB;
-            padding: 5px 15px;
-            border-radius: 20px;
-            margin: 5px;
-            font-size: 0.85rem;
-            border: 1px solid rgba(135, 206, 235, 0.3);
+            color: #b4b4b4;
+            animation: fadeIn 1s ease 1s both;
         }
 
         @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px rgba(135, 206, 235, 0.5),
-                             0 0 20px rgba(135, 206, 235, 0.3);
-            }
-            to {
-                text-shadow: 0 0 20px rgba(255, 160, 122, 0.8),
-                             0 0 30px rgba(255, 160, 122, 0.5);
-            }
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 2.5rem; }
-            .team-grid { grid-template-columns: 1fr; }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
+
         <header>
             <h1>Retail Management System</h1>
             <p class="subtitle">College Mini Project 2025</p>
@@ -237,22 +227,26 @@
         <div class="project-info">
             <h2>About the Project</h2>
             <p>
-                The Retail Management System is a comprehensive solution designed to streamline retail operations, 
-                inventory management, and sales tracking. Built as a college mini project, this system demonstrates 
-                modern software development practices and innovative problem-solving approaches to real-world 
-                business challenges.
+                The Retail Management System is a comprehensive solution designed to streamline retail operations,
+                inventory management, and sales tracking. Built as a college mini project, this system demonstrates
+                modern development principles, elegant UI/UX, and real-world practical implementation strategies.
             </p>
+
             <div style="margin-top: 20px;">
                 <span class="tech-badge">Inventory Management</span>
                 <span class="tech-badge">Sales Tracking</span>
                 <span class="tech-badge">Modern UI/UX</span>
                 <span class="tech-badge">Data Analytics</span>
+                <span class="tech-badge">Material UI</span>
+                <span class="tech-badge">Secure Architecture</span>
             </div>
         </div>
 
         <section class="team-section">
             <h2>Meet the Team</h2>
+
             <div class="team-grid">
+
                 <div class="team-card">
                     <div class="avatar">AT</div>
                     <h3>Atharv Thakre</h3>
@@ -273,13 +267,17 @@
                     <p class="enrollment">0103CS241113</p>
                     <p class="role">Frontend Developer & UI/UX Designer</p>
                 </div>
+
             </div>
         </section>
 
         <footer>
             <p>© 2025 Retail Management System | College Mini Project</p>
-            <p style="margin-top: 10px; font-size: 0.85rem;">Developed with dedication and innovation</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">
+                Designed with precision, creativity & modern development standards
+            </p>
         </footer>
+
     </div>
 </body>
 </html>
